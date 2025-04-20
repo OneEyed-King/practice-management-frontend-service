@@ -12,7 +12,8 @@ export default function CreateDoctor() {
   const router = useRouter();
 
   const [form, setForm] = useState({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     qualification: '',
     specialization: '',
     phone: '',
@@ -43,7 +44,10 @@ export default function CreateDoctor() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3001/doctor', form);
+      const response = await axios.post('http://localhost:3001/doctor', {
+        ...form,
+        fullName: `${form.firstName} ${form.lastName}`,
+      });
       alert('Doctor created successfully!');
       router.push('/admin/dashboard');
     } catch (error) {
@@ -56,14 +60,22 @@ export default function CreateDoctor() {
     <div className="min-h-screen bg-gray-900 text-white p-8">
       <h1 className="text-3xl font-bold mb-6">Create Doctor</h1>
       <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
-
         <input
-          placeholder="Full Name"
-          value={form.fullName}
-          onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+          placeholder="First Name"
+          value={form.firstName}
+          onChange={(e) => setForm({ ...form, firstName: e.target.value })}
           className="w-full p-2 rounded bg-gray-700 border border-gray-600"
           required
         />
+
+        <input
+          placeholder="Last Name"
+          value={form.lastName}
+          onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+          required
+        />
+
 
         <input
           placeholder="Qualification"
