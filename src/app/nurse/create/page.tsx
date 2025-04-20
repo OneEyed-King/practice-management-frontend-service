@@ -4,15 +4,16 @@ import { useState } from "react";
 
 export default function CreateNursePage() {
   const [form, setForm] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     phone: "",
     shift: "",
-    department:"",
+    department: "",
     email: "",
     password: "",
   });
 
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +23,8 @@ export default function CreateNursePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setError("");
+    setSuccess("");
     try {
       const response = await fetch("http://localhost:3001/nurse", {
         method: "POST",
@@ -30,9 +32,8 @@ export default function CreateNursePage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          fullName: form.fullName,
-          phone: form.phone || undefined,
-          shift: form.shift || undefined,
+          ...form,
+          fullName: `${form.firstName} ${form.lastName}`,
           user: {
             email: form.email,
             password: form.password,
@@ -45,19 +46,19 @@ export default function CreateNursePage() {
         throw new Error("Failed to create nurse");
       }
 
-      setSuccess(true);
-      setError("");
+      setSuccess("Nurse created successfully");
+
       setForm({
-        fullName: "",
+        firstName: "",
+        lastName: "",
         phone: "",
         shift: "",
-        department:"",
+        department: "",
         email: "",
         password: "",
       });
     } catch (err: any) {
       setError(err.message || "Something went wrong");
-      setSuccess(false);
     }
   };
 
@@ -69,13 +70,23 @@ export default function CreateNursePage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
-            name="fullName"
-            value={form.fullName}
+            name="firstName"
+            value={form.firstName}
             onChange={handleChange}
-            placeholder="Full Name"
+            placeholder="First Name"
             required
             className="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none"
           />
+          <input
+            type="text"
+            name="lastName"
+            value={form.lastName}
+            onChange={handleChange}
+            placeholder="Last Name"
+            required
+            className="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none"
+          />
+
 
           <input
             type="text"

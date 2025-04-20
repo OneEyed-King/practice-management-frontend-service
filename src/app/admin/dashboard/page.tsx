@@ -37,6 +37,12 @@ export default function AdminDashboard() {
             <h2 className="text-xl font-semibold text-white">Add Admin</h2>
           </div>
         </Link>
+
+        <Link href="/appointment/book-appointment">
+          <div className="bg-gray-800 p-6 rounded shadow hover:shadow-md cursor-pointer transition duration-200">
+            <h2 className="text-xl font-semibold text-white">Book Appointment</h2>
+          </div>
+        </Link>
       </div>
     </div>
   );

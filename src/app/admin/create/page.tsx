@@ -4,7 +4,8 @@ import { useState } from 'react';
 
 export default function CreateAdminPage() {
   const [form, setForm] = useState({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     phone: '',
     officeNumber: '',
     roleTitle: '',
@@ -13,29 +14,24 @@ export default function CreateAdminPage() {
     password: '',
   });
 
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:3001/adminstrator', {
+      const res = await fetch('http://localhost:3001/adminstrator', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          fullName: form.fullName,
-          phone: form.phone || undefined,
-          officeNumber: form.officeNumber || undefined,
-          roleTitle: form.roleTitle || undefined,
-          contactEmail: form.contactEmail || undefined,
+          ...form,
           user: {
             email: form.email,
             password: form.password,
@@ -44,14 +40,12 @@ export default function CreateAdminPage() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to create admin');
-      }
+      if (!res.ok) throw new Error('Failed to create admin');
 
-      setSuccess(true);
-      setError('');
+      setSuccess('Admin created successfully');
       setForm({
-        fullName: '',
+        firstName: '',
+        lastName: '',
         phone: '',
         officeNumber: '',
         roleTitle: '',
@@ -61,25 +55,35 @@ export default function CreateAdminPage() {
       });
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
-      setSuccess(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <div className="max-w-xl mx-auto bg-gray-800 p-8 rounded shadow">
-        <h1 className="text-2xl font-bold mb-6">Create Administrator</h1>
+    <div className="min-h-screen p-6 bg-gray-900 text-white flex items-center justify-center">
+      <form onSubmit={handleSubmit} className="w-full max-w-md bg-gray-800 rounded-lg p-6 shadow-md space-y-4">
+        <h2 className="text-2xl font-semibold mb-4">Register Admin</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="fullName"
-            value={form.fullName}
-            onChange={handleChange}
-            placeholder="Full Name"
-            required
-            className="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600"
-          />
+        {success && <p className="text-green-500">{success}</p>}
+        {error && <p className="text-red-500">{error}</p>}
+
+        <input
+          name="firstName"
+          placeholder="First Name"
+          value={form.firstName}
+          onChange={handleChange}
+          required
+          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+        />
+
+        <input
+          name="lastName"
+          placeholder="Last Name"
+          value={form.lastName}
+          onChange={handleChange}
+          required
+          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+        />
+
 
           <input
             type="text"
