@@ -152,6 +152,5 @@ export default function CreateAdminPage() {
           {error && <p className="text-red-400">{error}</p>}
         </form>
       </div>
-    </div>
   );
 }

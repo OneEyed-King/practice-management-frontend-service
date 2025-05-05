@@ -1,4 +1,5 @@
-// src/pages/admin/dashboard.tsx
+'use client';
+
 import Link from 'next/link';
 // import '@/app/globals.css'; 
 

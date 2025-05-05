@@ -1,4 +1,3 @@
-// src/pages/index.tsx
 'use client';
 import Link from 'next/link';
 // import '../app/globals.css'; // path might differ if not in src

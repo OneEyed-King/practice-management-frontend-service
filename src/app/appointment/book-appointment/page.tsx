@@ -141,8 +141,12 @@ export default function CreateAppointmentPage() {
         return alert("Incomplete data");
 
       const slotDate = getDateFromDayOfWeek(slot.dayOfWeek);
-      const appointmentDate = format(slotDate, "yyyy-MM-dd");
-
+      const [hours, minutes] = slot.startTime.split(":").map(Number);
+      const dateWithTime = new Date(slotDate);
+      dateWithTime.setHours(hours, minutes, 0, 0); // sets the slot time
+      
+      const appointmentDate = dateWithTime.toISOString(); // this includes both date & time
+      
       const response = await fetch("http://localhost:3001/appointment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
